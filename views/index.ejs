@@ -3,6 +3,14 @@
 <% include header.ejs %>
 <body>
   <div class="container">
+
+    <% if(locals.error){ %>
+      <div class="alert alert-dismissible alert-warning">
+        <button type="button" class="close" data-dismiss="alert">&times;</button>
+        <strong>Oops! <%= error %></strong>
+      </div>
+    <% } %>
+
     <div class="jumbotron">
       <h1><%= title %></h1>
       <p>Share questions with the world</p><br>
