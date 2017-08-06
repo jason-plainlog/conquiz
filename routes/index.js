@@ -17,7 +17,7 @@ router.post('/', function(req, res, next) {
         res.render('index', { title: 'Conquiz', error: newUser.username + ' had been used!', username: newUser.username});
       else{
         user.save();
-        res.render('index', { title: 'Conquiz', error: 'Success!' });
+        res.render('index', { title: 'Conquiz', success: 'Registed Successfully!' });
       }
     });
   }else{
