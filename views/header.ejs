@@ -1,5 +1,6 @@
 <head>
-  <title><%= title %></title>
+  <title>Conquiz</title>
+  <link rel="icon" type="image/png" href="/images/favicon.png" sizes="96x96">
   <link rel='stylesheet' href='//fonts.googleapis.com/earlyaccess/notosanstc.css'/>
   <link rel='stylesheet' href='/stylesheets/style.css'/>
   <script src="/javascripts/jquery-3.2.1.js"></script>
@@ -34,14 +35,31 @@
           </ul>
         </li>
       </ul>
-      <form class="navbar-form navbar-right" role="form" action="/" method="post">
-        <div class="form-group">
-          <input class="form-control" type="text" name="username" placeholder="Username" value = "<%= locals.username ? username: '' %>">
-          <input class="form-control" type="password" name="password" placeholder="Password" value = "">
-        </div>
-        <button type="submit" class="btn btn-default" name="submit" value = "signin">Sign in</button>
-        <button type="submit" class="btn btn-default" name="submit" value = "signup">Sing up</button>
-      </form>
+      <% if(!locals.user || !locals.user.authed){ %>
+        <form class="navbar-form navbar-right" role="form" action="/" method="post">
+          <div class="form-group">
+            <input class="form-control" type="text" name="username" placeholder="Username" value = "<%= locals.user? locals.user.username : '' %>">
+            <input class="form-control" type="password" name="password" placeholder="Password" value = "">
+          </div>
+          <button type="submit" class="btn btn-default" name="submit" value = "signin">Sign in</button>
+          <button type="submit" class="btn btn-default" name="submit" value = "signup">Sing up</button>
+        </form>
+      <% } else { %>
+        <ul class="nav navbar-nav navbar-right">
+          <li class="dropdown active">
+            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><%= locals.user.username.toUpperCase() %> <span class="caret"></span></a>
+            <ul class="dropdown-menu" role="menu">
+              <li><a href="#">382 $Q</a></li>
+              <li class="divider"></li>
+              <li><a href="#">Create</a></li>
+              <li><a href="#">Deposit</a></li>
+              <li class="divider"></li>
+              <li><a href="/settings">Settings</a></li>
+              <li><a href="/signout">Sign Out</a></li>
+            </ul>
+          </li>
+        </ul>
+      <% } %>
     </div>
   </div>
 </nav>
