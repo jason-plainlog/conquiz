@@ -1,8 +1,8 @@
 var sqlite3 = require('sqlite3').verbose();
-var db = new sqlite3.Database('models/user.db');
+var db = new sqlite3.Database('models/database.db');
 
 db.serialize(function() {
-  db.run("CREATE TABLE IF NOT EXISTS user(username VARCHAR UNIQUE, password VARCHAR, email VARCHAR, info TEXT)");
+  db.run("CREATE TABLE IF NOT EXISTS user(username VARCHAR UNIQUE, password VARCHAR, email VARCHAR, info TEXT, token INTEGER)");
 });
 
 function User(user){
@@ -11,6 +11,7 @@ function User(user){
   this.password = user.password;
   this.email = user.email;
   this.info = user.info;
+  this.token = user.token;
 
   this.authed = user.authed;
 };
@@ -41,7 +42,11 @@ User.prototype.exist = function exist(user, callback){
 }
 
 User.prototype.save = function save(callback){
-  db.run("INSERT INTO user(username, password, email, info) VALUES(?, ?, ?, ?)", this.username, this.password, this.email, this.info);
+  db.run("INSERT INTO user(username, password, email, info, token) VALUES(?, ?, ?, ?, ?)", this.username, this.password, this.email, this.info, 0);
+};
+
+User.prototype.remove = function remove(callback){
+  db.run("DELETE FROM user WHERE rowid=?", this.id);
 };
 
 module.exports = User;

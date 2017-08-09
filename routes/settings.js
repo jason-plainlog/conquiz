@@ -18,22 +18,32 @@ router.get('/', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-  var user = new User({ username: req.body['username'] });
-  user.exist(user, function(result) {
-    if(result){
-      res.render('settings', { error: req.body['username'] + ' had been registed!' });
-      return;
-    }else{
-      req.session.user.username = req.body['username'];
-      if(req.body['password'] != '')
-        res.session.user.password = crypto.createHash('md5').update(req.body['password']).digest('hex');
-      req.session.user.email = req.body['email'];
-      req.session.user.info = req.body['info'];
-      var user = new User(req.session.user);
-      user.update();
-      res.render('settings', { success: 'Profile Updated!' });
-    }
-  });
+  if(req.body['submit'] == 'update'){
+    var user = new User({ username: req.body['username'] });
+    user.exist(user, function(result) {
+      if(req.body['username'] != req.session.user.username && result){
+        res.render('settings', { error: req.body['username'] + ' had been registed!' });
+        return;
+      }else{
+        req.session.user.username = req.body['username'];
+        if(req.body['password'] != '')
+          res.session.user.password = crypto.createHash('md5').update(req.body['password']).digest('hex');
+        req.session.user.email = req.body['email'];
+        req.session.user.info = req.body['info'];
+        var user = new User(req.session.user);
+        user.update();
+        res.render('settings', { success: 'Profile Updated!' });
+      }
+    });
+  }
+
+  if(req.body['submit'] == 'delete'){
+    var user = new User({ id: req.session.user.id });
+    user.remove();
+    delete(res.locals.user);
+    req.session.destroy();
+    res.render('index', { success: 'Account Deleted!' });
+  }
 })
 
 
