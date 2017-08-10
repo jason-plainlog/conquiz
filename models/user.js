@@ -33,11 +33,11 @@ User.prototype.auth = function auth(user, callback){
 }
 
 User.prototype.exist = function exist(user, callback){
-  db.get("SELECT rowid as id FROM user WHERE username=?", this.username, function(err, row) {
+  db.get("SELECT rowid FROM user WHERE username=?", this.username, function(err, row) {
     if(err)
       console.log(err);
     if(callback)
-      callback(user, row? row['id']:0);
+      callback(user, row? row['rowid']:0);
   });
 }
 

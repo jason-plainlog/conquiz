@@ -19,15 +19,19 @@ router.get('/', function(req, res, next) {
 
 router.post('/', function(req, res, next) {
   if(req.body['submit'] == 'update'){
+    if(req.body['username'] == ''){
+      res.render('settings', { error: 'You can\'t have no username!' });
+      return;
+    }
     var user = new User({ username: req.body['username'] });
-    user.exist(user, function(result) {
+    user.exist(user, function(user, result) {
       if(req.body['username'] != req.session.user.username && result){
         res.render('settings', { error: req.body['username'] + ' had been registed!' });
         return;
       }else{
         req.session.user.username = req.body['username'];
         if(req.body['password'] != '')
-          res.session.user.password = crypto.createHash('md5').update(req.body['password']).digest('hex');
+          req.session.user.password = crypto.createHash('md5').update(req.body['password']).digest('hex');
         req.session.user.email = req.body['email'];
         req.session.user.info = req.body['info'];
         var user = new User(req.session.user);
